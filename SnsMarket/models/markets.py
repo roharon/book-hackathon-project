@@ -15,8 +15,7 @@ class Market(Base):
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at = Column(
-        DateTime,
-        nullable=False,
-        default=func.utc_timestamp(),
-        onupdate=func.utc_timestamp(),
+        DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
+
+    items = relationship("Item", back_populates="market")

@@ -1,5 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy import func
+from sqlalchemy.orm import relationship
+
 from database import Base
 
 
@@ -12,8 +14,7 @@ class User(Base):
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     updated_at = Column(
-        DateTime,
-        nullable=False,
-        default=func.utc_timestamp(),
-        onupdate=func.utc_timestamp(),
+        DateTime, nullable=False, default=func.now(), onupdate=func.now()
     )
+
+    orders = relationship("Order", back_populates="user")

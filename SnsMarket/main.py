@@ -1,13 +1,25 @@
-from fastapi import FastAPI
-from routers import users, items, orders, markets
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+from routers import items, orders
+from models.items import Item
+from models.markets import Market
+from models.orders import Order
+from models.users import User
+from exceptions import exceptions
 
 app = FastAPI()
-app.include_router(users.router)
 app.include_router(items.router)
 app.include_router(orders.router)
-app.include_router(markets.router)
 
 
-@app.get("/")
-def root():
-    return {"message": "Hello, world!"}
+@app.exception_handler(exceptions.BadRequestException)
+def bad_request_exception_handler(
+    request: Request, exc: exceptions.BadRequestException
+):
+    return JSONResponse(status_code=exc.status_code, content={"message": exc.message})
+
+
+@app.exception_handler(exceptions.NotFoundException)
+def not_found_exception_handler(request: Request, exc: exceptions.NotFoundException):
+    return JSONResponse(status_code=exc.status_code, content={"message": exc.message})
