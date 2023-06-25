@@ -1,14 +1,9 @@
-from typing import List
 from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
-from fastapi.security import HTTPBearer
 from sqlalchemy.orm import Session
 from services.items import fetch_items, fetch_item
 from schemas.items import ListItems, ShowItem
-from models.users import User
 
 from database import get_db
-from services.auth import current_user
 
 router = APIRouter()
 

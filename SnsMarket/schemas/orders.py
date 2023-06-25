@@ -21,3 +21,8 @@ class SingleOrder(BaseModel):
 
 class OrderExists(BaseModel):
     data: bool
+
+
+class OrderCreate(BaseModel):
+    item_id: int
+    quantity: int

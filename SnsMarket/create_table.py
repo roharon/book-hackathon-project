@@ -5,7 +5,6 @@ from models.items import Item
 from models.markets import Market
 from models.orders import Order
 from models.users import User
-from datetime import datetime
 
 Item.__table__.create(bind=engine, checkfirst=True)
 Market.__table__.create(bind=engine, checkfirst=True)
