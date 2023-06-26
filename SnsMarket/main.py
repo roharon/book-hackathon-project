@@ -8,7 +8,10 @@ from models.orders import Order
 from models.users import User
 from exceptions import exceptions
 
-app = FastAPI()
+app = FastAPI(
+    title="SnsMarket",
+    description="거래하기 안전한 SNS 마켓 API 문서"
+)
 app.include_router(items.router)
 app.include_router(orders.router)
 
