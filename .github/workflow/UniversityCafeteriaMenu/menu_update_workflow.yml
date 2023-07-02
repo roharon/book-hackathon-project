@@ -1,0 +1,13 @@
+name: updates
+on:
+  schedule:
+    - cron: '0 9 * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call our API route
+        run: |
+          curl --request POST \
+          --url 'example.com:8000/menus/event'
+
