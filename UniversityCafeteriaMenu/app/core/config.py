@@ -13,15 +13,10 @@ class Settings(BaseSettings):
             return v
         return PostgresDsn.build(
             scheme="postgresql",
-            user="postgres",
-            password="password",
-            host="127.0.0.1:5432",
-            # host="db",
+            user=values.get("POSTGRES_USER", "postgres"),
+            password=values.get("POSTGRES_PASSWORD", "password"),
+            host=values.get("POSTGRES_HOST", "db"),
             path="/app"
-            # user=values.get("POSTGRES_USER"),
-            # password=values.get("POSTGRES_PASSWORD"),
-            # host=values.get("POSTGRES_SERVER"),
-            # path=values.get("POSTGRES_DB"),
         )
 
 
