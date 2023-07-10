@@ -25,7 +25,7 @@ class Menu(Base):
         onupdate=func.now(),
     )
     updated_at = Column(
-        DateTime,
+        DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
         default=func.now(),

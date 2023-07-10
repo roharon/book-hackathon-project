@@ -8,6 +8,14 @@ class CafeteriaBase(BaseModel):
     name: str
 
 
+class CafeteriaCreate(CafeteriaBase):
+    pass
+
+
+class CafeteriaUpdate(CafeteriaBase):
+    pass
+
+
 class CafeteriaWithMenus(BaseModel):
     id: int
     name: str

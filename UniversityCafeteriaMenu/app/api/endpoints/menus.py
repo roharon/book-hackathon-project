@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from crud.crud_menus import menu
 from crud.crud_universities import university
+from crud.crud_cafeterias import cafeteria
 from schemas.menu import MenuImageUpload
 from models.menu import Menu
 from api.deps import get_db
@@ -26,12 +27,13 @@ def create_menu_image(menu_id: int, menu_image: MenuImageUpload, db: Session = D
         raise HTTPException(status_code=404, detail="해당하는 메뉴가 없습니다")
 
     result = menu.add_menu_image(db, menu_id=menu_datum.id, image_url=menu_image.image_url)
-    return result
+    return
 
 
 @router.post("/menus/event")
 def create_menus(db: Session = Depends(get_db)):
-    menu = Menu(description="비빔밥\n핫도그", price="3000", cafeteria_id=cafeteria.id)
+    cafeteria_id = cafeteria.get_first_cafeteria(db).id
+    menu = Menu(description="비빔밥\n핫도그", price="3000", cafeteria_id=cafeteria_id)
     # TODO: 크롤링하여 메뉴 가져오기
     db.add(menu)
     db.commit()

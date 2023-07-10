@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy_utils import database_exists
 
 from db.session import engine, SessionLocal
 from db.base_class import Base  # noqa: F401
@@ -10,6 +11,9 @@ from models.menu_image import MenuImage
 
 def init_db(db: Session) -> None:
     Base.metadata.create_all(bind=engine)
+
+    if database_exists(engine.url):
+        return
 
     db = SessionLocal()
     university = University(name="한국대학교")
