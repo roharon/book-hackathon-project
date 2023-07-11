@@ -1,5 +1,3 @@
-import logging
-
 from db.init_db import init_db
 from db.session import SessionLocal
 
