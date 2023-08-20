@@ -1,10 +1,14 @@
 import logging
-from lib.search_campsites import search_campsite
+
+from lib.search_campsite import search_campsite
 
 
 def lambda_handler(event, context):
 	logging.info(event)
-	result = search_campsite(None, None)
+	result = search_campsite('CLEAR',
+	                         begins_at=event['queryStringParameters']['begins_at'],
+	                         ends_at=event['queryStringParameters']['begins_at'])
+
 	return {
 		'statusCode': 200,
 		'body': result
