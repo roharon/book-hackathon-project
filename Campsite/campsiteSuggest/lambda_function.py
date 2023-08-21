@@ -1,4 +1,5 @@
 import logging
+import json
 
 from lib.search_campsite import search_suggest_campsite
 
@@ -13,5 +14,5 @@ def lambda_handler(event, context):
 
 	return {
 		'statusCode': 200,
-		'body': result
+		'body': json.dumps(result)
 	}
