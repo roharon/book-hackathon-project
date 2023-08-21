@@ -27,7 +27,7 @@ def fetch_precipitation(begins_at, reg_id):
 		"dataType": "JSON"
 	}
 
-	response = requests.get(URL, params=params)
+	response = requests.get(URL, params=params, verify=False)
 	weather = json.loads(response.text)['response']['body']['items']['item'][0]
 
 	return _precipitation_score(weather)

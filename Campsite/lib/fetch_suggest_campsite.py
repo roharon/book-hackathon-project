@@ -1,5 +1,6 @@
 import json
 from os import environ
+
 import requests
 
 URL = "https://apis.data.go.kr/B551011/GoCamping/locationBasedList"
@@ -18,7 +19,7 @@ def fetch_suggest_campsite(longitude, latitude):
 		"radius": "30000"
 	}
 
-	response = requests.get(URL, params=params)
+	response = requests.get(URL, params=params, verify=False)
 	campsite_items = json.loads(response.text)['response']['body']['items']
 
 	return campsite_items['item'] if campsite_items != "" else []

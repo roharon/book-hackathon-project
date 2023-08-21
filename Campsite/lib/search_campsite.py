@@ -1,8 +1,8 @@
 import datetime
 
-from fetch_campsite import fetch_campsite
-from fetch_suggest_campsite import fetch_suggest_campsite
-from fetch_precipitation import fetch_precipitation
+from lib.fetch_campsite import fetch_campsite
+from lib.fetch_suggest_campsite import fetch_suggest_campsite
+from lib.fetch_precipitation import fetch_precipitation
 
 
 def search_campsite(weather_type, begins_at, ends_at):

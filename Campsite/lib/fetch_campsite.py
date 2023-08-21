@@ -1,8 +1,9 @@
 import json
 from os import environ
+
 import requests
 
-URL = "https://apis.data.go.kr/B551011/GoCamping/basedList"
+URL = "http://apis.data.go.kr/B551011/GoCamping/basedList"
 
 
 def fetch_campsite():
@@ -15,7 +16,7 @@ def fetch_campsite():
 		"_type": "json"
 	}
 
-	response = requests.get(URL, params=params)
+	response = requests.get(URL, params=params, verify=False)
 	campsites = json.loads(response.text)['response']['body']['items']['item']
 
 	return campsites
