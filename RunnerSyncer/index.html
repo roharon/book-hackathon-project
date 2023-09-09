@@ -1,0 +1,73 @@
+<!--<a href="https://www.strava.com/oauth/authorize?client_id=93979&redirect_uri=https://localhost&response_type=code&scope=activity:read_all">클릭</a>-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Sync Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%; /* 변경: 화면 너비에 맞춤 */
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 변경: 버튼 스타일을 모바일 화면에서도 적절하게 표시 */
+        @media screen and (max-width: 500px) {
+            button {
+                display: block;
+                margin: 10px auto;
+            }
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min..css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <h1>Data Sync</h1>
+    <!-- Strava 인증을 위한 링크 -->
+    <button id="strava-button">Sync to Strava</button>
+
+    <!-- Nike 토큰을 담는 링크 -->
+    <button id="nike-button">Sync to Nike</button>
+    <input id="nike-access-token"/>
+</div>
+
+<script>
+    document.getElementById("strava-button").onclick = function () {
+        location.href = "https://www.strava.com/oauth/authorize?client_id=93979&redirect_uri=https://localhost&response_type=code&scope=activity:read_all";
+    }
+
+    document.getElementById("nike-button").onclick = function () {
+        // TODO: get nike access token
+    }
+</script>
+</body>
+</html>
