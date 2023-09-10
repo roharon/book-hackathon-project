@@ -7,15 +7,15 @@ import boto3
 from sync import nike
 
 
-def lambda_handler(event, context):
+def lambda_handler(event, _context):
     nike_access_token = event["nike"]["access_token"]
     strava_access_token = event["strava"]["access_token"]
 
     nike_activity_ids = nike.fetch_activity_ids(nike_access_token)
 
     session = boto3.Session(
-        aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"],
-        aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"],
+        aws_access_key_id=os.environ["ACCESS_KEY_ID"],
+        aws_secret_access_key=os.environ["SECRET_ACCESS_KEY"],
     )
     s3_client = session.client("s3")
 
