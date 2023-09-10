@@ -29,7 +29,7 @@ class TRKPoint:
 
 def to_gpx(data):
     GPX_TEMPLATE = """<?xml version="1.0" encoding="UTF-8"?>
-	<gpx creator="NRC to Strava" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" xmlns="http://www.topografix.com/GPX/1/1"
+	<gpx creator="NRC to Strava" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" xmlns="http://www.topografix.com/GPX/1/1
 		<metadata>
 			<time>{}</time>
 		</metadata>
