@@ -8,8 +8,8 @@ from sync import nike
 
 
 def lambda_handler(event, _context):
-    nike_access_token = event["nike"]["access_token"]
-    strava_access_token = event["strava"]["access_token"]
+    nike_access_token = event["body"]["nike_access_token"]
+    strava_access_token = event["body"]["strava_access_token"]
 
     nike_activity_ids = nike.fetch_activity_ids(nike_access_token)
 
