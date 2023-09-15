@@ -1,0 +1,66 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: 러닝 기록 연동하기
+  description: 러닝 기록 연동 프로젝트
+paths:
+  /authorize:
+    get:
+      tags:
+        - 토큰 발급
+      description: 스트라바 액세스 토큰 발급
+      operationId: authorize
+      parameters:
+        - in: query
+          name: code
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: 액세스 토큰 발급 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: 액세스 토큰
+                  refresh_token:
+                    type: string
+                    description: 리프레시 토큰
+                  expires_at:
+                    type: integer
+                    description: 만료되는 기한
+                    example: 1739367686
+  /sync:
+    post:
+      tags:
+        - 기록 동기화
+      description: 기록 동기화
+      operationId: accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sync'
+      responses:
+        '201':
+          description: 성공적으로 업로드하였습니다.
+        '400':
+          description: 액세스 토큰이 올바르지 않습니다.
+components:
+  schemas:
+    Sync:
+      type: object
+      required:
+        - strava_access_token
+        - nike_access_token
+      properties:
+        strava_access_token:
+          type: string
+          example: 3q5h9uyq35y9uq35i93q5y09u3q54u90q34590
+        nike_access_token:
+          type: string
+          example: ahbe508pouja346tq3yuh5497t34
