@@ -13,10 +13,7 @@ def lambda_handler(event, _context):
 
     nike_activity_ids = nike.fetch_activity_ids(nike_access_token)
 
-    session = boto3.Session(
-        aws_access_key_id=os.environ["ACCESS_KEY_ID"],
-        aws_secret_access_key=os.environ["SECRET_ACCESS_KEY"],
-    )
+    session = boto3.Session()
     s3_client = session.client("s3")
 
     for nike_activity_id in nike_activity_ids:
