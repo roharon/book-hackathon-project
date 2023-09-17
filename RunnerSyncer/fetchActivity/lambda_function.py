@@ -16,6 +16,7 @@ def lambda_handler(event, _context):
     session = boto3.Session()
     s3_client = session.client("s3")
 
+    succeed_activity_ids = []
     for nike_activity_id in nike_activity_ids:
         gpx_raw_data = fetch_gpx_raw_data_from_nike(nike_activity_id, nike_access_token)
 
@@ -26,9 +27,11 @@ def lambda_handler(event, _context):
             "gpx/{}.gpx".format(nike_activity_id),
             strava_access_token,
         )
+
+        succeed_activity_ids.append(nike_activity_id)
         break
 
-    return {"statusCode": 200, "body": json.dumps(nike_activity_ids)}
+    return {"statusCode": 200, "body": json.dumps(succeed_activity_ids)}
 
 
 def fetch_gpx_raw_data_from_nike(nike_activity_id, nike_access_token):
