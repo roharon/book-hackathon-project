@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: Share-Google-Drive-folder
+  description: 구글 드라이브 공유폴더 초대를 자동화하는 프로젝트
+paths:
+  /share:
+    post:
+      tags:
+        - invite
+      description: 이메일 주소
+      operationId: email
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Share'
+      responses:
+        '201':
+          description: 이메일 초대 성공
+        '400':
+          description: 이메일 형식이 올바르지 않습니다
+components:
+  schemas:
+    Share:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: email@email.com
