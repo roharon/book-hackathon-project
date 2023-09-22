@@ -25,6 +25,7 @@ def lambda_handler(event, _context):
 		}
 
 
+# https://developers.google.com/drive/api/reference/rest/v3/permissions?hl=ko#Permission
 def share(email=None, verify_code=None):
 	email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 	if not re.fullmatch(email_regex, email):
@@ -48,7 +49,7 @@ def share(email=None, verify_code=None):
 	}
 
 	data = json.dumps({
-		"role": os.environ.get('GOOGLE_DRIVE_ROLE'),
+		"role": "commenter",
 		"type": "user",
 		"emailAddress": email
 	})
