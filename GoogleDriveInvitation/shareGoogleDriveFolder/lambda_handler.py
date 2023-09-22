@@ -30,10 +30,10 @@ def share(email=None, verify_code=None):
 	if not re.fullmatch(email_regex, email):
 		return RuntimeError("email 형식이 올바르지 않습니다.")
 
-	if verify_code != os.environ.get('verify_code'):
+	if verify_code != os.environ.get('VERIFY_CODE'):
 		return RuntimeError("verify_code가 일치하지 않습니다.")
 
-	file_id = os.environ.get('file_id')
+	file_id = os.environ.get('FILE_ID')
 	if file_id is None:
 		return RuntimeError("file_id가 없습니다.")
 
@@ -48,14 +48,13 @@ def share(email=None, verify_code=None):
 	}
 
 	data = json.dumps({
-		"role": os.environ.get('role'),
+		"role": os.environ.get('GOOGLE_DRIVE_ROLE'),
 		"type": "user",
 		"emailAddress": email
 	})
 	permission_url = (
-		"https://www.googleapis.com/drive/v3/files/{file_id}/permissions?&sendNotificationEmail={send_notification}&emailMessage={message}"
-		.format(file_id=file_id, send_notification=os.environ['send_notification'],
-		        message=os.environ['email_message']))
+		"https://www.googleapis.com/drive/v3/files/{file_id}/permissions?emailMessage={message}"
+		.format(file_id=file_id, message='공유 문서함에 구성원이 추가되었습니다.'))
 	res = requests.post(permission_url, headers=header, data=data)
 
 	if res.status_code != 200:
