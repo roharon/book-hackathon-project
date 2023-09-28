@@ -71,9 +71,9 @@ def get_token():
 
 	result = requests.post(
 		"https://www.googleapis.com/oauth2/v4/token?client_id={}&client_secret={}&refresh_token={}".format(
-			os.environ['client_id'],
-			os.environ['client_secret'],
-			os.environ['refresh_token']
+			os.environ['CLIENT_ID'],
+			os.environ['CLIENT_SECRET'],
+			os.environ['REFRESH_TOKEN']
 		), headers=headers)
 
 	if result.status_code == 200:
