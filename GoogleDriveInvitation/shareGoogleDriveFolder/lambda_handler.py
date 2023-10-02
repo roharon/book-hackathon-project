@@ -8,7 +8,7 @@ import requests
 
 def lambda_handler(event, _context):
 	try:
-		body = json.loads(event['body'])
+		body = event['body']
 		email = body['email']
 		verify_code = body['verify_code']
 
@@ -18,8 +18,8 @@ def lambda_handler(event, _context):
 			"statusCode": 201
 		}
 	except Exception as e:
+		print(e)
 		logging.info(e)
-
 		return {
 			"statusCode": 400
 		}
@@ -29,19 +29,19 @@ def lambda_handler(event, _context):
 def share(email=None, verify_code=None):
 	email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
 	if not re.fullmatch(email_regex, email):
-		return RuntimeError("email 형식이 올바르지 않습니다.")
+		raise RuntimeError("email 형식이 올바르지 않습니다.")
 
 	if verify_code != os.environ.get('VERIFY_CODE'):
-		return RuntimeError("verify_code가 일치하지 않습니다.")
+		raise RuntimeError("verify_code가 일치하지 않습니다.")
 
 	file_id = os.environ.get('FILE_ID')
 	if file_id is None:
-		return RuntimeError("file_id가 없습니다.")
+		raise RuntimeError("file_id가 없습니다.")
 
 	token = get_token()
 
 	if token is None:
-		return RuntimeError("token을 가져올 수 없습니다.")
+		raise RuntimeError("token을 가져올 수 없습니다.")
 
 	header = {
 		"Content-Type": "application/json",
@@ -70,11 +70,14 @@ def get_token():
 	}
 
 	result = requests.post(
-		"https://www.googleapis.com/oauth2/v4/token?client_id={}&client_secret={}&refresh_token={}".format(
+		"https://www.googleapis.com/oauth2/v4/token?client_id={}&client_secret={}&refresh_token={}&grant_type=refresh_token".format(
 			os.environ['CLIENT_ID'],
 			os.environ['CLIENT_SECRET'],
 			os.environ['REFRESH_TOKEN']
 		), headers=headers)
+
+	print(result)
+	print(result.json())
 
 	if result.status_code == 200:
 		result_json = result.json()
