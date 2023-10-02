@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>공유문서함 초대</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v6.4.2/js/all.js"></script>
+</head>
+
+<body>
+<section class="hero is-info is-fullheight">
+    <div class="hero-body">
+        <div class="container has-text-centered">
+            <div class="column is-6 is-offset-3">
+                <h1 class="title">
+                    공유문서함 초대
+                </h1>
+                <div class="box">
+                    <div class="field is-grouped">
+                        <p class="control is-expanded has-icons-left">
+                            <input class="input is-rounded is-hovered" id="email" type="email"
+                                   placeholder="이메일을 적어주세요">
+
+                            <span class="icon is-small is-left">
+                                    <i class="fas fa-envelope"></i>
+                                </span>
+                        </p>
+                    </div>
+                    <div class="field is-grouped">
+                        <p class="control is-expanded has-icons-left">
+                            <input class="is-rounded input" type="text" id="code" placeholder="초대 코드">
+                            <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                        </p>
+                        <p class="control">
+                            <button class="button is-info" id="submit" title="submit">확인</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+<script>
+    const API_ENDPOINT = "https://q02eh0irgd.execute-api.ap-northeast-2.amazonaws.com/dev/share";
+
+    const email = document.getElementById("email");
+    const code = document.getElementById("code");
+    const submit = document.getElementById("submit");
+    const btn_origin_color = submit.style.backgroundColor;
+
+    email.addEventListener('input', inputEmail);
+
+    function request_submit(evt) {
+
+        evt.preventDefault();
+
+        const data = {
+            email: email.value,
+            verify_code: code.value
+        }
+
+        fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: new Headers({
+                "content-type": "application/json"
+            }),
+            body: JSON.stringify(data)
+        }).then(res => {
+            console.log(res)
+            if (res.redirected) {
+                window.location.href = res.url;
+            } else if (res.status == 400) {
+            }
+        });
+    };
+
+    function inputEmail(e) {
+        var email = document.getElementById("email")
+
+        const input = e.target.value;
+        // Check if the input is NOT blank first, and if it's not, make sure it matches our regex test
+        // Why: because we don't want to start validating before the user has started typing; after that it's fair game
+        if (input && /(^\w.*@\w+\.\w)/.test(input)) {
+            submit.addEventListener("click", request_submit);
+            email.classList.add('is-success');
+            email.classList.remove('is-danger');
+
+            submit.style.backgroundColor = btn_origin_color;
+
+        } else {
+            submit.removeEventListener("click", request_submit);
+            email.classList.add('is-danger');
+            email.classList.remove('is-success');
+
+            submit.style.backgroundColor = 'grey';
+        }
+    };
+</script>
+
+</html>
