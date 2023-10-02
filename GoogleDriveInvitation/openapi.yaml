@@ -30,3 +30,6 @@ components:
         email:
           type: string
           example: email@email.com
+        verify_code:
+          type: string
+          example: 123456
