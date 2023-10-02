@@ -8,7 +8,7 @@ import requests
 
 def lambda_handler(event, _context):
 	try:
-		body = event['body']
+		body = json.loads(event['body'])
 		email = body['email']
 		verify_code = body['verify_code']
 
@@ -18,8 +18,7 @@ def lambda_handler(event, _context):
 			"statusCode": 201
 		}
 	except Exception as e:
-		print(e)
-		logging.info(e)
+		logging.error(e)
 		return {
 			"statusCode": 400
 		}
@@ -76,7 +75,6 @@ def get_token():
 			os.environ['REFRESH_TOKEN']
 		), headers=headers)
 
-	print(result)
 	print(result.json())
 
 	if result.status_code == 200:
