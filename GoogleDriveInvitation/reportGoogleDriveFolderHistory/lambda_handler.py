@@ -8,12 +8,12 @@ from botocore.exceptions import ClientError
 
 
 def lambda_handler(event, context):
-	aws_region = os.environ.get('AWS_REGION')
-	admin_email = os.environ.get('admin_email')
+	aws_region = os.environ.get('REGION')
+	admin_email = os.environ.get('ADMIN_EMAIL')
 
 	subject = "구글 드라이브 초대 주간 리포트"
-	log = activity_log(os.environ.get('file_id'))
-	body_html = "<h1>이메일 리포트 내용입니다</h1>\n{}".format(log)
+	log = activity_log(os.environ.get('FILE_ID'))
+	body_html = "<h1>공유 문서함 활동 리포트</h1>\n{}".format(log)
 
 	client = boto3.client('ses', region_name=aws_region)
 
@@ -41,12 +41,14 @@ def lambda_handler(event, context):
 
 		logging.info("Email sent! Message ID: {}".format(response['MessageId']))
 
+		print(response)
 		return {
 			'statusCode': 200,
 			'body': json.dumps(response)
 		}
 
 	except ClientError as e:
+		print(e)
 		logging.error(e.response['Error']['Message'])
 
 
@@ -70,11 +72,13 @@ def get_token():
 	}
 
 	result = requests.post(
-		"https://www.googleapis.com/oauth2/v4/token?client_id={}&client_secret={}&refresh_token={}".format(
-			os.environ['client_id'],
-			os.environ['client_secret'],
-			os.environ['refresh_token']
+		"https://www.googleapis.com/oauth2/v4/token?client_id={}&client_secret={}&refresh_token={}&grant_type=refresh_token".format(
+			os.environ['CLIENT_ID'],
+			os.environ['CLIENT_SECRET'],
+			os.environ['REFRESH_TOKEN']
 		), headers=headers)
+
+	print(result.json())
 
 	if result.status_code == 200:
 		result_json = result.json()
