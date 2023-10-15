@@ -1,0 +1,119 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: subscribe-blog-article
+  description: 즐겨보는 블로그 글을 모아보기
+paths:
+  /rss:
+    post:
+      tags:
+        - rss
+      description: 구독할 블로그를 추가합니다
+      operationId: add-rss
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddRss'
+      responses:
+        '201':
+          description: 구독할 블로그를 추가하였습니다.
+        '400':
+          description: 올바르지 않은 블로그 URL입니다
+  /rss/{id}:
+    get:
+      tags:
+        - rss
+      description: 구독하는 블로그 목록을 조회합니다
+      operationId: list-rss
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfRss'
+    delete:
+      tags:
+        - rss
+      description: 블로그를 구독 해제합니다.
+      operationId: delete-rss
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          example: 307f1f77
+          required: true
+          description: rss의 ID
+      responses:
+        '204':
+          description: 블로그를 구독 해제하였습니다.
+        '404':
+          description: 존재하지 않는 ID입니다.
+  /rss/feed:
+    get:
+      tags:
+        - feed
+      description: 구독한 블로그의 새로운 글 목록을 조회합니다
+      operationId: list-rss-feeds
+      responses:
+        '200':
+          description: 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RssFeed'
+
+components:
+  schemas:
+    AddRss:
+      type: object
+      required:
+        - blog_url
+      properties:
+        blog_url:
+          type: string
+          example: https://blog.aaronroh.org
+    ArrayOfRss:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: 블로그 제목
+            example: 노아론 블로그
+          description:
+            type: string
+            description: 블로그 설명
+            example: 백엔드 지식에 대한 내용을 정리합니다
+          link:
+            type: string
+            nullable: true
+            description: 블로그 URL
+    RssFeed:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            description: 글 제목
+            example: Azure와 AWS를 비교해 봅니다.
+          description:
+            type: string
+            description: 글 본문
+            example: Azure는 마이크로소프트에서...
+          pub_date:
+            type: string
+            description: 글을 게시한 시간
+            example: 2025-01-01T11:37:07+00:00
+          blog_title:
+            type: string
+            description: 블로그 제목
+            example: 노아론 블로그
+          blog_description:
+            type: string
+            description: 블로그 설명
+            example: 백엔드 지식에 대한 내용을 정리합니다
