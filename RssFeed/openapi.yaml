@@ -18,9 +18,12 @@ paths:
       responses:
         '201':
           description: 구독할 블로그를 추가하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rss'
         '400':
-          description: 올바르지 않은 블로그 URL입니다
-  /rss/{id}:
+          description: 올바르지 않은 블로그 URL입니다.
     get:
       tags:
         - rss
@@ -33,6 +36,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArrayOfRss'
+  /rss/{id}:
     delete:
       tags:
         - rss
@@ -64,9 +68,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RssFeed'
-
 components:
   schemas:
+    Rss:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: 블로그 ID
+          example: 307f1f77
+        title:
+          type: string
+          description: 블로그 제목
+          example: 노아론 블로그
+        description:
+          type: string
+          description: 블로그 설명
+          example: 백엔드 지식에 대한 내용을 정리합니다
+        link:
+          type: string
+          nullable: true
+          description: 블로그 URL
+    ArrayOfRss:
+      type: array
+      items:
+        $ref: '#/components/schemas/Rss'
     AddRss:
       type: object
       required:
@@ -75,23 +101,6 @@ components:
         blog_url:
           type: string
           example: https://blog.aaronroh.org
-    ArrayOfRss:
-      type: array
-      items:
-        type: object
-        properties:
-          title:
-            type: string
-            description: 블로그 제목
-            example: 노아론 블로그
-          description:
-            type: string
-            description: 블로그 설명
-            example: 백엔드 지식에 대한 내용을 정리합니다
-          link:
-            type: string
-            nullable: true
-            description: 블로그 URL
     RssFeed:
       type: array
       items:
@@ -100,12 +109,16 @@ components:
           title:
             type: string
             description: 글 제목
-            example: Azure와 AWS를 비교해 봅니다.
-          description:
+            example: Azure와 AWS를 비교해봅니다.
+          summary:
             type: string
-            description: 글 본문
+            description: 글 요약
             example: Azure는 마이크로소프트에서...
-          pub_date:
+          link:
+            type: string
+            description: 글 URL
+            example: https://blog.example.com/azure-vs-aws/
+          published_at:
             type: string
             description: 글을 게시한 시간
             example: 2025-01-01T11:37:07+00:00
@@ -113,7 +126,3 @@ components:
             type: string
             description: 블로그 제목
             example: 노아론 블로그
-          blog_description:
-            type: string
-            description: 블로그 설명
-            example: 백엔드 지식에 대한 내용을 정리합니다

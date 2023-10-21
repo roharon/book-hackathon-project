@@ -7,4 +7,4 @@ feedparser
 azure-identity
 pymongo
 python-dotenv
-
+html2text
