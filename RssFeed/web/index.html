@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>즐겨보는 블로그 글 모아보기</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+<div class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">
+    즐겨찾는 블로그 글 모아보기
+</div>
+<ul role="list" class="p-20 divide-y divide-slate-200">
+
+</ul>
+</body>
+
+
+<script>
+    let url = 'https://myrssfeed.azure-api.net/api/rss/feed';
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data);
+            const list = document.querySelector('ul');
+            data.forEach(datum => {
+                const li = document.createElement('li');
+                li.classList.add('flex', 'justify-between', 'gap-x-6', 'py-4');
+                const div = document.createElement('div');
+                div.classList.add('flex', 'min-w-0', 'gap-x-4');
+                const div2 = document.createElement('div');
+                div2.classList.add('min-w-0', 'flex-auto');
+                const a = document.createElement('a');
+                a.href = datum.link;
+                const p = document.createElement('p');
+                p.classList.add('text-m', 'font-semibold', 'leading-8', 'text-gray-900');
+                p.innerText = datum.title;
+
+                const summary = document.createElement('p');
+                summary.classList.add('text-s', 'leading-5', 'text-gray-500');
+                summary.innerText = datum.summary.slice(0, 50).replace("\n", "").trim() + '...';
+
+                const p2 = document.createElement('p');
+                p2.classList.add('mt-1', 'truncate', 'text-xs', 'leading-3', 'text-gray-500');
+                const date = new Date(datum.published_at);
+                p2.innerText = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+                a.appendChild(p);
+                a.appendChild(summary);
+                a.appendChild(p2);
+                div2.appendChild(a);
+                div.appendChild(div2);
+                li.appendChild(div);
+                list.appendChild(li);
+
+            });
+        });
+</script>
+</html>
