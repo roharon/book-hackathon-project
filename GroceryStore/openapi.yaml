@@ -1,0 +1,171 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: grocery-store
+  description: 장 함께 나눠보기
+paths:
+  /groups:
+    post:
+      tags:
+        - groups
+      description: 그룹 추가하기
+      operationId: post-group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddGroupRequest'
+      responses:
+        '201':
+          description: 그룹을 추가한 경우 제공합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+        '400':
+          description: 파라미터가 올바르지 않은 경우 제공합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddGroupBadRequestResponse'
+    get:
+      tags:
+        - groups
+      description: 그룹 목록 조회하기
+      operationId: get-groups
+      responses:
+        '200':
+          description: 그룹 목록을 조회합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupsResponse'
+  /groups/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    delete:
+      tags:
+        - groups
+      description: 그룹 삭제하기
+      operationId: delete-group
+      responses:
+        '204':
+          description: 그룹을 삭제한 경우 제공합니다.
+    get:
+      tags:
+        - groups
+      description: 그룹 단일 조회하기
+      operationId: get-group
+      responses:
+        '200':
+          description: 그룹을 조회합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroupResponse'
+  /groups/{id}/participate:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    post:
+      tags:
+        - participate
+      description: 그룹 참여하기
+      operationId: post-participate-group
+      responses:
+        '201':
+          description: 그룹에 참여한 경우 제공합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipateGroupResponse'
+  /participation_conditions/me:
+    get:
+      tags:
+        - user
+      description: 사용자의 그룹 참여 조건 조회하기
+      operationId: get-participation-conditions
+      responses:
+        '200':
+          description: 사용자의 그룹 참여 조건을 조회합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipateGroupResponse'
+    put:
+      tags:
+        - user
+      description: 사용자의 그룹 참여 조건 수정하기
+      operationId: put-participation-conditions
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParticipateGroupResponse'
+      responses:
+        '201':
+          description: 사용자의 그룹 참여 조건을 조회합니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParticipateGroupResponse'
+components:
+  schemas:
+    ParticipationCondition:
+      type: object
+      properties:
+        place:
+          type: string
+          description: 장소
+          example: OO마트 시청점
+    GroupResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 그룹 ID
+          example: 1
+        name:
+          type: string
+          description: 그룹 이름
+          example: 그룹 이름
+        participation_conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParticipationCondition'
+    GroupsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/GroupResponse'
+    AddGroupRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 그룹 이름
+          example: 그룹 이름
+        participation_conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParticipationCondition'
+    AddGroupBadRequestResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: 에러 메세지 설명
+          example: 그룹 이름이 올바르지 않습니다.
+    ParticipateGroupResponse:
+      type: object
+      properties:
+        participation_conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ParticipationCondition'
