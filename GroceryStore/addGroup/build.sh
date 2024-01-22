@@ -4,6 +4,6 @@ pip install --platform manylinux2014_aarch64 --target=./.build --implementation 
 cp ./lambda_function.py ./.build
 cd ./.build
 
-wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -P ./ca
+wget https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem
 zip -r ../addGroup.zip .
 rm -rf ../.build
