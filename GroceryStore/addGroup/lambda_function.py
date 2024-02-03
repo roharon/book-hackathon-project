@@ -21,7 +21,12 @@ def lambda_handler(event, context):
     if type(participation_conditions) is not list:
         return bad_reqeust("참여 조건이 올바르지 않습니다.")
 
-    group = {"group_name": group_name, "participation_conditions": participation_conditions}
+    group = {
+        "group_name": group_name,
+        "participation_conditions": participation_conditions,
+        "owner_email": event["requestContext"]["authorizer"]["email"]
+    }
+
     result = db_client.insert_one(group)
 
     return {
