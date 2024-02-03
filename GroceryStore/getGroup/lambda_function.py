@@ -1,5 +1,6 @@
 import os
 import json
+from bson.objectid import ObjectId
 
 import pymongo
 
@@ -12,13 +13,18 @@ def lambda_handler(event, context):
     group_id = event['pathParameters']['id']
 
     db_client = mongo_client()[GROUPS_COLLECTION_NAME]
-    result = db_client.find_one({"_id": group_id})
+    result = db_client.find_one({"_id": ObjectId(group_id)})
+
+    if result is None:
+        return {
+            "statusCode": 404
+        }
 
     return {
         "statusCode": 200,
         "body": json.dumps(
             {
-                "id": result["_id"],
+                "id": str(result["_id"]),
                 "name": result["group_name"],
                 "participation_conditions": result["participation_conditions"]
             }
