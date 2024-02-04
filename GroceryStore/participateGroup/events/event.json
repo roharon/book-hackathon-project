@@ -1,0 +1,10 @@
+{
+  "pathParameters": {
+    "id": "65bf5d4eac643a1c24671a19"
+  },
+  "requestContext": {
+    "authorizer": {
+      "email": "fake@gmail.com"
+    }
+  }
+}
