@@ -6,14 +6,15 @@ import pymongo
 
 DATABASE_NAME = "grocery_store"
 GROUPS_COLLECTION_NAME = "groups"
+PARTICIPATION_CONDITIONS_COLLECTION_NAME = "participation_conditions"
 CONNECTION_STRING = os.environ.get("DOCUMENT_DB_CONNECTION_STRING")
 
 
 def lambda_handler(event, context):
-    collection = mongo_client()[GROUPS_COLLECTION_NAME]
+    groups_collection = mongo_client()[GROUPS_COLLECTION_NAME]
 
-    participation_conditions = [{"place": "이마트 ABC점"}, {"place": "홈플러스 XYZ점"}]  # TODO: 유저의 참여조건을 불러오다.
-    cursor = collection.find({"participation_conditions": {"$in": participation_conditions}})
+    participation_conditions = get_participation_conditions(event["requestContext"]["authorizer"]["email"])
+    cursor = groups_collection.find({"participation_conditions": {"$in": participation_conditions}})
 
     groups = []
 
@@ -32,6 +33,13 @@ def lambda_handler(event, context):
             groups
         )
     }
+
+
+def get_participation_conditions(email):
+    collection = mongo_client()[PARTICIPATION_CONDITIONS_COLLECTION_NAME]
+    collection_result = collection.find_one({"email": email})
+
+    return collection_result["participation_conditions"] if collection_result is not None else []
 
 
 def mongo_client():
