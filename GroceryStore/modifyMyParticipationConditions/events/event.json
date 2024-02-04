@@ -1,0 +1,8 @@
+{
+  "requestContext": {
+    "authorizer": {
+      "email": "fake@gmail.com"
+    }
+  },
+  "body": "{\"participation_conditions\": [{\"place\": \"OO\\ub9c8\\ud2b8 \\uc2dc\\uccad\\uc810\"}]}"
+}
