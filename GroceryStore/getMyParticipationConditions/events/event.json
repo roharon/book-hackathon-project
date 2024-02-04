@@ -1,0 +1,67 @@
+{
+  "resource": "/groups/{id}",
+  "path": "/groups/65bde4968531686184bd8879",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Authorization": "aaaaaaaa"
+  },
+  "multiValueHeaders": {
+    "Accept": [
+      "*/*"
+    ],
+    "Accept-Encoding": [
+      "gzip, deflate, br"
+    ],
+    "Authorization": [
+      "aaaaaaaa"
+    ]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": {
+    "id": "65bde4968531686184bd8879"
+  },
+  "stageVariables": null,
+  "requestContext": {
+    "resourceId": "7vfwmt",
+    "authorizer": {
+      "full_name": "fake_name",
+      "principalId": "user",
+      "integrationLatency": 348,
+      "email": "fake@gmail.com"
+    },
+    "resourcePath": "/groups/{id}",
+    "operationName": "get-group",
+    "httpMethod": "GET",
+    "extendedRequestId": "SjI4EHAYoE0EA_A=",
+    "requestTime": "03/Feb/2024:07:43:21 +0000",
+    "path": "/test/groups/65bde4968531686184bd8879",
+    "accountId": "541915504278",
+    "protocol": "HTTP/1.1",
+    "stage": "test",
+    "domainPrefix": "q99tlol6f0",
+    "requestTimeEpoch": 1706946201770,
+    "requestId": "dd2651fc-1455-4033-ad0e-2d5b24dd139f",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "sourceIp": "106.247.92.27",
+      "principalOrgId": null,
+      "accessKey": null,
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "PostmanRuntime/7.36.1",
+      "user": null
+    },
+    "domainName": "localhost",
+    "deploymentId": "y6rm43",
+    "apiId": "q99tlol6f0"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
