@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     group_name = body["name"]
     participation_conditions = body["participation_conditions"]
 
-    db_client = mongo_client()[GROUPS_COLLECTION_NAME]
+    collection = mongo_client()[GROUPS_COLLECTION_NAME]
 
     if type(group_name) is not str:
         return bad_reqeust("그룹 이름이 올바르지 않습니다.")
@@ -24,15 +24,15 @@ def lambda_handler(event, context):
     group = {
         "group_name": group_name,
         "participation_conditions": participation_conditions,
-        "owner_email": event["requestContext"]["authorizer"]["email"]
+        "owner_email": 'aaronroh@gmail.com'
     }
 
-    result = db_client.insert_one(group)
+    collection.insert_one(group)
 
     return {
         "statusCode": 201,
         "body": json.dumps({
-            "id": str(result.inserted_id),
+            "id": str(group['_id']),
             "group_name": group["group_name"],
             "participation_conditions": group["participation_conditions"]
         })

@@ -13,8 +13,8 @@ def lambda_handler(event, context):
     group_id = event['pathParameters']['id']
     current_user_email = event["requestContext"]["authorizer"]["email"]
 
-    db_client = mongo_client()[GROUPS_COLLECTION_NAME]
-    group = db_client.find_one({"_id": ObjectId(group_id)})
+    collection = mongo_client()[GROUPS_COLLECTION_NAME]
+    group = collection.find_one({"_id": ObjectId(group_id)})
 
     if group is None:
         return {
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
             "statusCode": 403
         }
 
-    db_client.delete_one({"_id": ObjectId(group_id)})
+    collection.delete_one({"_id": ObjectId(group_id)})
 
     return {
         "statusCode": 204
