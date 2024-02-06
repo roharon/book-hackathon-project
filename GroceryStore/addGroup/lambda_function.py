@@ -9,6 +9,7 @@ CONNECTION_STRING = os.environ.get("DOCUMENT_DB_CONNECTION_STRING")
 
 
 def lambda_handler(event, context):
+    email = event["requestContext"]["authorizer"]["email"]
     body = json.loads(event["body"])
     group_name = body["name"]
     participation_conditions = body["participation_conditions"]
@@ -24,7 +25,8 @@ def lambda_handler(event, context):
     group = {
         "group_name": group_name,
         "participation_conditions": participation_conditions,
-        "owner_email": 'aaronroh@gmail.com'
+        "owner_email": email,
+        "members": [email]
     }
 
     collection.insert_one(group)
