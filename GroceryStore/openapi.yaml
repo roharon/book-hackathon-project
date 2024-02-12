@@ -55,6 +55,10 @@ paths:
       responses:
         '204':
           description: 그룹을 삭제한 경우 제공합니다.
+        '403':
+          description: 그룹을 삭제할 수 없는 경우 제공합니다.
+        '404':
+          description: 그룹을 찾을 수 없는 경우 제공합니다.
     get:
       tags:
         - groups
@@ -69,10 +73,6 @@ paths:
                 $ref: '#/components/schemas/GroupResponse'
         '404':
           description: 그룹을 찾을 수 없는 경우 제공합니다.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/NotFoundResponse'
   /groups/{id}/participate:
     parameters:
       - name: id
@@ -117,7 +117,7 @@ paths:
               $ref: '#/components/schemas/ParticipateGroupResponse'
       responses:
         '201':
-          description: 사용자의 그룹 참여 조건을 조회합니다.
+          description: 사용자의 그룹 참여 조건을 수정합니다.
           content:
             application/json:
               schema:
