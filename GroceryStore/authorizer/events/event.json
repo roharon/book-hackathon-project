@@ -1,3 +1,4 @@
 {
-  "body": "{\"name\": \"hello world\", \"participation_conditions\": \"[]\"}"
+  "methodArn": "arn:aws:execute-api:test/",
+  "authorizationToken": "aaaaaaaa"
 }
