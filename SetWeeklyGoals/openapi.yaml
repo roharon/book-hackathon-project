@@ -1,0 +1,244 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: set-weekly-goals
+  description: 한 주간의 목표 세우기
+paths:
+  /goals:
+    post:
+      tags:
+        - goals
+      description: 목표를 추가합니다
+      operationId: add-goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddGoal'
+      responses:
+        '201':
+          description: 목표를 추가하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Goal'
+        '400':
+          description: 필수 값 'description' 이 없습니다.
+    get:
+      tags:
+        - goals
+      description: 목표를 조회합니다.
+      parameters:
+        - in: query
+          name: week_offset
+          schema:
+            type: integer
+            default: 0
+            example: 0
+          description: 0은 이번 주, 1은 지난 주를 의미합니다.
+      responses:
+        '200':
+          description: 목표를 조회하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfGoal'
+        '404':
+          description: 설정한 목표가 없습니다.
+  /goals/stats:
+    get:
+      tags:
+        - stats
+      description: 목표 달성 현황을 조회합니다.
+      parameters:
+        - in: query
+          name: year
+          schema:
+            type: integer
+            example: 2024
+          description: 연도
+        - in: query
+          name: month
+          schema:
+            type: integer
+            example: 1
+          description: 월
+      responses:
+        '200':
+          description: 목표 달성 현황을 조회하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfGoalStat'
+  /assessments:
+    post:
+      tags:
+        - assessments
+      description: 지난 주 목표에 대한 한 줄 평을 추가합니다.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddAssessment'
+      responses:
+        '201':
+          description: 한 줄 평을 추가하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assessment'
+        '409':
+          description: 지난 주에 생성한 목표가 없습니다.
+    get:
+      tags:
+        - assessments
+      description: 목표의 한 줄 평을 조회합니다.
+      parameters:
+        - in: query
+          name: week_offset
+          schema:
+            type: integer
+            default: 0
+            example: 0
+          description: 0은 이번 주, 1은 지난 주를 의미합니다.
+      responses:
+        '200':
+          description: 한 줄 평을 조회하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assessment'
+        '404':
+          description: 한 줄 평이 없습니다
+components:
+  schemas:
+    Goal:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        description:
+          type: string
+          example: 책 한 권 읽기
+        resolved:
+          type: boolean
+          example: false
+        year:
+          type: integer
+          example: 2024
+        month:
+            type: integer
+            example: 1
+        week:
+          type: integer
+          example: 1
+        created_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+        updated_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+    AddGoal:
+      type: object
+      required:
+        - description
+      properties:
+        description:
+          type: string
+          example: 책 한 권 읽기
+    ArrayOfGoal:
+      type: array
+      items:
+        $ref: '#/components/schemas/Goal'
+    Assessment:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        year:
+          type: integer
+          example: 2024
+        month:
+          type: integer
+          example: 1
+        week:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: 목표를 설정한 덕에 보람찬 한 주를 보낼 수 있었다.
+          description: 목표에 대한 한 줄 평을 적습니다.
+        created_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+        updated_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+    AddAssessment:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          example: 목표를 설정한 덕에 보람찬 한 주를 보낼 수 있었다
+          description: 목표에 대한 한 줄 평을 적습니다.
+        resolvedGoalIds:
+          type: array
+          description: 달성한 목표 ID 목록
+          example: [1, 2, 3]
+          items:
+            type: integer
+            example: 1
+            description: 목표 ID
+    GoalOfGoalStat:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        description:
+          type: string
+          example: 책 한 권 읽기
+        resolved:
+          type: boolean
+          example: false
+        created_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+        updated_at:
+          type: string
+          example: 2024-01-01T08:00:00+09:00
+    AssessmentOfGoalStat:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        content:
+          type: string
+          example: "목표를 설정한 덕에 보람찬 한 주를 보낼 수 있었다."
+        created_at:
+          type: string
+          example: 2024-01-08T15:10:34+09:00
+        updated_at:
+          type: string
+          example: 2024-01-08T15:10:34+09:00
+    GoalStat:
+      type: object
+      properties:
+        weeks:
+          type: integer
+          example: 1
+        goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalOfGoalStat'
+        assessment:
+          $ref: '#/components/schemas/AssessmentOfGoalStat'
+    ArrayOfGoalStat:
+      type: array
+      items:
+        $ref: '#/components/schemas/GoalStat'
