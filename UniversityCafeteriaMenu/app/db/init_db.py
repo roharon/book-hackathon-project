@@ -12,9 +12,6 @@ from models.menu_image import MenuImage
 def init_db(db: Session) -> None:
     Base.metadata.create_all(bind=engine)
 
-    if database_exists(engine.url):
-        return
-
     db = SessionLocal()
     university = University(name="한국대학교")
     db.add(university)
