@@ -1,0 +1,5 @@
+azure-functions==1.18.0
+SQLAlchemy==2.0.27
+sqlalchemy-orm==1.2.10
+mysqlclient
+pymysql
