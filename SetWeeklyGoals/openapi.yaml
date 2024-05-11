@@ -89,6 +89,7 @@ paths:
                 $ref: '#/components/schemas/Assessment'
         '409':
           description: 지난 주에 생성한 목표가 없습니다.
+  /assessment:
     get:
       tags:
         - assessments
@@ -128,8 +129,8 @@ components:
           type: integer
           example: 2024
         month:
-            type: integer
-            example: 1
+          type: integer
+          example: 1
         week:
           type: integer
           example: 1
@@ -185,10 +186,22 @@ components:
           type: string
           example: 목표를 설정한 덕에 보람찬 한 주를 보낼 수 있었다
           description: 목표에 대한 한 줄 평을 적습니다.
+        year:
+          type: integer
+          example: 2024
+          description: 연도
+        month:
+          type: integer
+          example: 1
+          description: 월
+        week:
+          type: integer
+          example: 1
+          description: 주
         resolvedGoalIds:
           type: array
           description: 달성한 목표 ID 목록
-          example: [1, 2, 3]
+          example: [ 1, 2, 3 ]
           items:
             type: integer
             example: 1
