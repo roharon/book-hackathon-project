@@ -10,9 +10,7 @@ import json
 from datetime import date
 from logging import getLogger
 
-factory = sessionmaker(bind=create_engine(environ.get("DB_CONNECTION_STRING"), echo=True))
-session = factory()
-
+DB_CONNECTION_STRING = environ.get("DB_CONNECTION_STRING")
 app = func.FunctionApp()
 
 MOCK_USER_ID = 1
@@ -29,8 +27,8 @@ def add_goal(req: func.HttpRequest) -> func.HttpResponse:
 
     goal = Goal(user_id=user_id, description=request_body.get("description"), resolved=False,
                 year=year, month=month, week=week, created_at=datetime.now(), updated_at=datetime.now())
-    session.add(goal)
-    session.commit()
+    session().add(goal)
+    session().commit()
 
     return func.HttpResponse(
         json.dumps(goal.as_dict(), default=str, ensure_ascii=False),
@@ -45,7 +43,7 @@ def get_goals(req: func.HttpRequest) -> func.HttpResponse:
     target_year = target_date.year
     target_week = week_of_this_month(target_date)
 
-    goals = session.query(Goal).filter(
+    goals = session().query(Goal).filter(
         Goal.year == target_year and Goal.month == target_month and Goal.week == target_week
     ).order_by(Goal.id.desc())
 
@@ -64,9 +62,9 @@ def get_goals_stats(req: func.HttpRequest) -> func.HttpResponse:
             json.dumps({"message": "연도와 월을 입력해주세요."}),
             status_code=400)
 
-    goals = session.query(Goal).where(Goal.year == year).where(Goal.month == month).order_by(Goal.week.asc())
+    goals = session().query(Goal).where(Goal.year == year).where(Goal.month == month).order_by(Goal.week.asc())
 
-    assessments = session.query(Assessment).where(Assessment.year == year).where(Assessment.month == month).order_by(
+    assessments = session().query(Assessment).where(Assessment.year == year).where(Assessment.month == month).order_by(
         Assessment.week.asc())
     assessments = {assessment.week: assessment for assessment in assessments}
 
@@ -116,7 +114,7 @@ def add_assessment(req: func.HttpRequest) -> func.HttpResponse:
 
     user_id = get_user_id()
 
-    already_wrote_assessment = (session.query(Assessment)
+    already_wrote_assessment = (session().query(Assessment)
                                 .where(Assessment.year == year)
                                 .where(Assessment.month == month)
                                 .where(Assessment.week == week).first()) is not None
@@ -126,7 +124,7 @@ def add_assessment(req: func.HttpRequest) -> func.HttpResponse:
             json.dumps({"message": "이미 해당 주차의 평가를 작성했습니다."}, default=str, ensure_ascii=False),
             status_code=400)
 
-    is_goal_not_exists = (session.query(Goal)
+    is_goal_not_exists = (session().query(Goal)
                           .where(Goal.year == year)
                           .where(Goal.month == month)
                           .where(Goal.week == week).first()) is None
@@ -135,17 +133,17 @@ def add_assessment(req: func.HttpRequest) -> func.HttpResponse:
             json.dumps({"message": "해당하는 주차의 목표가 존재하지 않습니다."}, default=str, ensure_ascii=False),
             status_code=400)
 
-    goals = session.query(Goal).where(Goal.id.in_(resolved_goal_ids)).all()
+    goals = session().query(Goal).where(Goal.id.in_(resolved_goal_ids)).all()
     if len(goals) != len(resolved_goal_ids):
         return func.HttpResponse(
             json.dumps({"message": "해당하는 목표가 존재하지 않습니다."}, default=str, ensure_ascii=False),
             status_code=400)
 
-    session.query(Goal).where(Goal.id.in_(resolved_goal_ids)).update({"resolved": True})
+    session().query(Goal).where(Goal.id.in_(resolved_goal_ids)).update({"resolved": True})
     assessment = Assessment(user_id=user_id, year=year, month=month, week=week, content=content,
                             created_at=datetime.now(), updated_at=datetime.now())
-    session.add(assessment)
-    session.commit()
+    session().add(assessment)
+    session().commit()
 
     return func.HttpResponse(
         json.dumps({
@@ -166,7 +164,7 @@ def get_assessment(req: func.HttpRequest) -> func.HttpResponse:
     week_offset = req.params.get("week_offset") or 0
     target_date = current_datetime() - timedelta(weeks=int(week_offset))
 
-    assessment = (session.query(Assessment)
+    assessment = (session().query(Assessment)
                   .where(Assessment.year == target_date.year)
                   .where(Assessment.month == target_date.month)
                   .where(Assessment.week == week_from_datetime(target_date))
@@ -205,3 +203,6 @@ def week_of_this_month():
 
 def week_from_datetime(ddate: date):
     return ddate.day // 7 + 1
+
+def session():
+    return sessionmaker(bind=create_engine(DB_CONNECTION_STRING, echo=True))()
