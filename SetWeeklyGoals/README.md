@@ -12,9 +12,9 @@ MySQL 실행이 필요합니다.
 
 
 ```shell
-docker run -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=weekly_goals -p 3306:3306 -d mysql:8.3
+docker run -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=setweeklygoals -p 3306:3306 -d mysql:8.3
 
-DB_CONNECTION_STRING=mysql://localhost:3306/weekly_goals func host start
+MYSQLCONNSTR_DB=mysql://localhost:3306/setweeklygoals func host start
 ```
 
 ## 배포

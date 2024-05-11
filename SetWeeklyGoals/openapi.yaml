@@ -87,7 +87,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Assessment'
-        '409':
+        '400':
           description: 지난 주에 생성한 목표가 없습니다.
   /assessment:
     get:

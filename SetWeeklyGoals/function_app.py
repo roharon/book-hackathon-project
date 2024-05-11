@@ -10,7 +10,7 @@ import json
 from datetime import date
 from logging import getLogger
 
-DB_CONNECTION_STRING = environ.get("DB_CONNECTION_STRING")
+DB_CONNECTION_STRING = environ.get("MYSQLCONNSTR_DB")
 app = func.FunctionApp()
 
 MOCK_USER_ID = 1
