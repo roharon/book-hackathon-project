@@ -28,7 +28,7 @@ location="koreacentral"
 resourceGroup="set-weekly-goals-$randomIdentifier"
 storage="setweeklygoals$randomIdentifier"
 functionApp="set-weekly-goals-app-$randomIdentifier"
-dbName="setweeklygoals"
+dbName="weekly_goals"
 dbAdminUser="setweeklygoals"
 # db admin 이름은 독자에 따라 변경해주세요.
 dbAdminPassword="setweeklygoals1!"
