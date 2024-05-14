@@ -13,12 +13,11 @@ from logging import getLogger
 DB_CONNECTION_STRING = environ.get("MYSQLCONNSTR_DB")
 app = func.FunctionApp()
 
-MOCK_USER_ID = 1
-
+_MOCK_USER_ID = 1
+_SESSION = sessionmaker(bind=create_engine(DB_CONNECTION_STRING, echo=True))()
 
 @app.route(route="goals", methods=["POST"], auth_level="anonymous")
 def add_goal(req: func.HttpRequest) -> func.HttpResponse:
-    getLogger().info(environ.get("DB_CONNECTION_STRING"))
     request_body = req.get_json()
     user_id = get_user_id()
     year = current_datetime().year
@@ -31,7 +30,16 @@ def add_goal(req: func.HttpRequest) -> func.HttpResponse:
     session().commit()
 
     return func.HttpResponse(
-        json.dumps(goal.as_dict(), default=str, ensure_ascii=False),
+        json.dumps({
+            "id": goal.id,
+            "description": goal.description,
+            "resolved": goal.resolved,
+            "year": goal.year,
+            "month": goal.month,
+            "week": goal.week,
+            "created_at": goal.created_at,
+            "updated_at": goal.updated_at
+        }, default=str, ensure_ascii=False),
         status_code=200)
 
 
@@ -41,7 +49,7 @@ def get_goals(req: func.HttpRequest) -> func.HttpResponse:
     target_date = current_datetime() - timedelta(weeks=int(weekly_offset))
     target_month = target_date.month
     target_year = target_date.year
-    target_week = week_of_this_month(target_date)
+    target_week = week_from_datetime(target_date)
 
     goals = session().query(Goal).filter(
         Goal.year == target_year and Goal.month == target_month and Goal.week == target_week
@@ -190,7 +198,7 @@ def get_assessment(req: func.HttpRequest) -> func.HttpResponse:
 
 
 def get_user_id():
-    return MOCK_USER_ID
+    return _MOCK_USER_ID
 
 
 def current_datetime():
@@ -204,5 +212,6 @@ def week_of_this_month():
 def week_from_datetime(ddate: date):
     return ddate.day // 7 + 1
 
+
 def session():
-    return sessionmaker(bind=create_engine(DB_CONNECTION_STRING, echo=True))()
+    return _SESSION

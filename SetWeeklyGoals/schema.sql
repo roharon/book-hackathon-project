@@ -1,3 +1,4 @@
+create database `weekly_goals`;
 use `weekly_goals`;
 
 CREATE TABLE `users`
