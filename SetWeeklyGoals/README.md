@@ -19,6 +19,23 @@ MYSQLCONNSTR_DB=mysql://localhost:3306/setweeklygoals func host start
 
 ## 배포
 
+
+```shell
+$randomIdentifier = Get-Random -Minimum 10000000 -Maximum 99999999
+$location = "koreacentral"
+$resourceGroup = "set-weekly-goals-$randomIdentifier"
+$storage = "setweeklygoals$randomIdentifier"
+$functionApp = "set-weekly-goals-app-$randomIdentifier"
+$dbName = "weekly_goals"
+$dbAdminUser = "setweeklygoals"
+# db admin 이름은 독자에 따라 변경해주세요.
+$dbAdminPassword = "setweeklygoals1!"
+# db admin 비밀번호는 독자에 따라 변경해주세요.
+$skuStorage = "Standard_LRS"
+$skuMySQL = "Standard_B1s"
+$functionsVersion = "4"
+```
+
 ```shell
 
 az login
@@ -29,9 +46,9 @@ resourceGroup="set-weekly-goals-$randomIdentifier"
 storage="setweeklygoals$randomIdentifier"
 functionApp="set-weekly-goals-app-$randomIdentifier"
 dbName="weekly_goals"
-dbAdminUser="setweeklygoals"
+dbAdminUser=setweeklygoals
 # db admin 이름은 독자에 따라 변경해주세요.
-dbAdminPassword="setweeklygoals1!"
+dbAdminPassword=setweeklygoals1!
 # db admin 비밀번호는 독자에 따라 변경해주세요.
 skuStorage="Standard_LRS"
 skuMySQL="Standard_B1s"
@@ -56,13 +73,29 @@ az mysql flexible-server create --public-access 0.0.0.0 --resource-group $resour
 
 
 # MySQL 서버에 데이터베이스를 생성합니다.
- az mysql flexible-server db create --resource-group $resourceGroup --database-name $dbName --server-name $storage
+echo "MySQL 서버 $storage 에 데이터베이스 $dbName 을 생성합니다."
+az mysql flexible-server db create --resource-group $resourceGroup --database-name $dbName --server-name $storage
+
+# Azure Database for MySQL 서버 인스턴스의 매개변수 require_secure_transport 를 OFF로 설정합니다.
+az mysql flexible-server parameter set --name require_secure_transport --value OFF --server-name $storage --resource-group $resourceGroup
+
+# MySQL의 host 정보를 출력합니다.
+$mysqlHostName = $(az mysql flexible-server show --resource-group $resourceGroup --name $storage --query "fullyQualifiedDomainName" -o tsv)
+# 라눅스, 맥의 경우
+# $mysqlHostName = $(az mysql flexible-server show --resource-group $resourceGroup --name $storage --query "fullyQualifiedDomainName" -o tsv) 
+
+# MySQL의 연결 문자열을 출력합니다.
+$mysqlConnectionString="mysql+pymysql://${dbAdminUser}:${dbAdminPassword}@${mysqlHostName}/${dbName}"
+# 라눅스, 맥의 경우
+# mysqlConnectionString="mysql+pymysql://${dbAdminUser}:${dbAdminPassword}@${mysqlHostName}/${dbName}"
+echo $mysqlConnectionString
+
+az webapp config connection-string set --resource-group $resourceGroup --name $functionApp -t mysql --settings "DB=$mysqlConnectionString"
 
 # Azure Function 함수를 배포합니다.
 func azure functionapp publish $functionApp
 
 # az functionapp show --resource-group $resourceGroup --name $functionApp --query outboundIpAddresses --output tsv
-
 
 # 모든 과정을 진행하였다면 리소스를 삭제합니다.
 az group delete --name $resourceGroup --yes --no-wait
