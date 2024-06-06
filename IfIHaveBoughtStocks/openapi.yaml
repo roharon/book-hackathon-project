@@ -1,0 +1,80 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: if-i-had-bought-the-stock-at-this-time
+  description: 이때 주식을 매수했더라면
+paths:
+  /stocks/{companySymbol}/profit:
+    get:
+      tags:
+        - stocks
+      description: 주식에 대한 손익을 조회합니다
+      parameters:
+        - in: path
+          name: companySymbol
+          schema:
+            type: string
+            example: MSFT
+          required: true
+          description: 주식 종목의 심볼
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            example: 2010-01-01
+          required: true
+          description: 시작 일자 (yyyy-MM-dd)
+      responses:
+        '200':
+          description: 손익을 조회하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profit'
+        '404':
+          description: 해당하는 기업이 없습니다
+  /products:
+    get:
+      tags:
+        - products
+      description: 가격에 맞는 상품을 조회합니다.
+      parameters:
+        - in: query
+          name: price
+          schema:
+            type: integer
+            example: 3500
+          required: true
+          description: 가격 (달러 기준)
+      responses:
+        '200':
+          description: 상품을 조회하였습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '400':
+          description: 올바르지 않은 요청입니다
+components:
+  schemas:
+    Profit:
+      type: object
+      properties:
+        profit:
+          type: integer
+          example: 30000
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 아이패드 프로 128GB
+          description: 상품 이름
+        image_url:
+          type: string
+          example: https://example.com/image.png
+          description: 상품 이미지 URL
+        count:
+          type: integer
+          example: 3
+          description: 상품 수량
