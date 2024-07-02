@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>주식 손익 조회</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body class="bg-white h-full">
+<header class="bg-white shadow-sm w-full  top-0 ">
+    <div class="max-auto  px-8 py-4 bg-white">
+        <div class="text-center">
+            <div class="app-name ">
+                <h1 class="text-black text-2xl font-bold">주식 손익 조회</h1>
+            </div>
+        </div>
+    </div>
+</header>
+<header class="bg-white w-full top-0" id="header" style="display: none">
+    <div class="max-auto  px-8 py-12 bg-white">
+        <div class="flex justify-between">
+            <div class="welcomecopy flex items-center space-x-4 mr-10">
+                <h1 class="text-black text-4xl font-bold">손익 $<span
+                        class="font-mono text-blue-700 total-price">000,000</span></h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="flex flex-col bg-white items-center justify-center" id="card" style="display: none">
+    <div class="px-8 py-10 bg-white w-128 h-128 overflow-hidden rounded-lg shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
+        <img src=""
+             class="w-full h-64 object-cover product-image-url">
+        <h3 class="text-4xl font-bold font-mono product-title"></h3>
+    </div>
+</div>
+<br>
+<form id='buy-stocks'>
+    <div class="grid grid-cols-7 gap-4">
+        <div class="col-start-4 col-span-1">
+            <label for="company_symbol" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">주식 종목
+                코드</label>
+            <input type="text" id="company_symbol"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   placeholder="John" required/>
+        </div>
+        <div class="col-start-4 col-span-1">
+            <label for="start_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">매수 시작일</label>
+            <input type="date" id="start_date"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                   placeholder="Doe" required/>
+        </div>
+        <div class="col-start-4 col-span-1">
+            <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                매수하기
+            </button>
+        </div>
+    </div>
+</form>
+</div>
+
+<script>
+    const API_HOST = 'http://localhost:7071/api';
+    const cardElement = document.getElementById('card');
+    const headerElement = document.getElementById('header');
+    const companySymbolElement = document.getElementById('company_symbol');
+    const startDateElement = document.getElementById('start_date');
+    const totalPriceElement = document.querySelector('.total-price');
+    const productTitleElement = document.querySelector('.product-title');
+    const productImageElement = document.querySelector('.product-image-url');
+
+    setDateDefaultValue();
+
+    document.getElementById('buy-stocks').addEventListener('submit', function (e) {
+        e.preventDefault();
+        fetchStockProfit()
+            .then(fetchProduct)
+            .then(showProduct)
+            .catch(handleError);
+    });
+
+    function fetchStockProfit() {
+        const companySymbol = companySymbolElement.value;
+        const startDate = startDateElement.value;
+        const url = `${API_HOST}/stocks/${companySymbol}/profit?start_date=${startDate}`;
+        return fetch(url).then(response => response.json());
+    }
+
+    function fetchProduct(data) {
+        totalPriceElement.textContent = data.profit.toFixed(2);
+        const url = `${API_HOST}/products?price=${data.profit}`;
+        return fetch(url).then(response => response.json());
+    }
+
+    function showProduct(data) {
+        productTitleElement.textContent = `${data.name} ${data.count}${getCountingUnit(data.name)}`
+        productImageElement.src = data.image_url;
+        headerElement.style.display = '';
+        cardElement.style.display = '';
+    }
+
+    function handleError(error) {
+        console.error('Error:', error);
+        alert('주식 정보를 가져오는데 실패했습니다.');
+    }
+
+    function setDateDefaultValue() {
+        const currentDate = new Date();
+        currentDate.setFullYear(currentDate.getFullYear() - 1);
+        document.getElementById('start_date').valueAsDate = currentDate;
+    }
+
+    function getCountingUnit(product) {
+        switch (product) {
+            case '피자':
+                return '한';
+            case '펜':
+                return '자루';
+            case '아이패드 에어':
+                return '대';
+            case '노트북':
+                return '대';
+        }
+    }
+</script>
+</body>
+</html>

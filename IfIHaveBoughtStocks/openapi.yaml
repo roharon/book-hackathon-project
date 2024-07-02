@@ -4,19 +4,19 @@ info:
   title: if-i-had-bought-the-stock-at-this-time
   description: 이때 주식을 매수했더라면
 paths:
-  /stocks/{companySymbol}/profit:
+  /stocks/{company_symbol}/profit:
     get:
       tags:
         - stocks
       description: 주식에 대한 손익을 조회합니다
       parameters:
         - in: path
-          name: companySymbol
+          name: company_symbol
           schema:
             type: string
             example: MSFT
           required: true
-          description: 주식 종목의 심볼
+          description: 주식 종목 코드
         - in: query
           name: startDate
           schema:
@@ -42,7 +42,7 @@ paths:
         - in: query
           name: price
           schema:
-            type: integer
+            type: number
             example: 3500
           required: true
           description: 가격 (달러 기준)
@@ -61,7 +61,7 @@ components:
       type: object
       properties:
         profit:
-          type: integer
+          type: number
           example: 30000
     Product:
       type: object
