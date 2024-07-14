@@ -61,7 +61,7 @@
 </div>
 
 <script>
-    const API_HOST = 'http://localhost:7071/api';
+    const API_HOST = 'https://if-i-have-bought-stocks-app-5433674310.azurewebsites.net';
     const cardElement = document.getElementById('card');
     const headerElement = document.getElementById('header');
     const companySymbolElement = document.getElementById('company_symbol');
@@ -83,13 +83,13 @@
     function fetchStockProfit() {
         const companySymbol = companySymbolElement.value;
         const startDate = startDateElement.value;
-        const url = `${API_HOST}/stocks/${companySymbol}/profit?start_date=${startDate}`;
+        const url = `${API_HOST}/api/stocks/${companySymbol}/profit?start_date=${startDate}`;
         return fetch(url).then(response => response.json());
     }
 
     function fetchProduct(data) {
         totalPriceElement.textContent = data.profit.toFixed(2);
-        const url = `${API_HOST}/products?price=${data.profit}`;
+        const url = `${API_HOST}/api/products?price=${data.profit}`;
         return fetch(url).then(response => response.json());
     }
 
