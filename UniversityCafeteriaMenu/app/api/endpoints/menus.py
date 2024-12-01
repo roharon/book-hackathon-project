@@ -34,11 +34,7 @@ def create_menu_image(menu_id: int, menu_image: MenuImageUpload, db: Session = D
 
 @router.post("/menus/event")
 def create_menus(db: Session = Depends(get_db)):
-    university = University(name="한국대학교")
-    cafeteria = Cafeteria(name="학생식당", description="학생식당", university_id=university.id)
-    menu = Menu(description="비빔밥\n핫도그", price="3000", cafeteria_id=cafeteria.id)
+   menu = Menu(description="비빔밥\n핫도그", price="3000", cafeteria_id=1)
     # TODO: 크롤링하여 메뉴 가져오기
-    db.add(university)
-    db.add(cafeteria)
-    db.add(menu)
-    db.commit()
+   db.add(menu)
+   db.commit()
