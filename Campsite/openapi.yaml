@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: 주말에 갈 캠핑장 찾기 API
+  description: 주말에 갈 캠핑장 찾기 프로젝트의 API
+
+paths:
+  /campsites/search:
+    get:
+      tags:
+        - 검색
+      description: 캠핑장 검색하기
+      operationId: campsitesSearch
+      parameters:
+        - in: query
+          name: weather_type
+          description: 날씨 유형
+          schema:
+            type: string
+            enum:
+              - "CLEAR"
+              - "DOWNFALL"
+          example: "CLEAR"
+        - in: query
+          name: begins_at
+          description: 시작일
+          schema:
+            type: string
+            format: date-time
+          example: "2030-01-01T00:00:00+0900"
+        - in: query
+          name: ends_at
+          description: 종료일
+          schema:
+            type: string
+            format: date-time
+          example: "2030-01-02T00:00:00+0900"
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Campsite'
+
+  /campsites/suggests:
+    get:
+      tags:
+        - 제안
+      description: 다른 일정 찾기
+      operationId: campsitesSuggests
+      parameters:
+        - in: query
+          name: weather_type
+          description: 날씨 유형
+          schema:
+            type: string
+            enum:
+              - "CLEAR"
+              - "DOWNFALL"
+          example: "CLEAR"
+        - in: query
+          name: begins_at
+          description: 시작일
+          schema:
+            type: string
+            format: date-time
+          example: "2030-01-01T00:00:00+0900"
+        - in: query
+          name: ends_at
+          description: 종료일
+          schema:
+            type: string
+            format: date-time
+          example: "2030-01-02T00:00:00+0900"
+        - in: query
+          name: longitude
+          description: 경도
+          schema:
+            type: number
+            format: float
+        - in: query
+          name: latitude
+          description: 위도
+          schema:
+            type: number
+            format: float
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Campsite'
+
+components:
+  schemas:
+    Campsite:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'OO 캠핑장'
+        allar:
+          type: number
+          example: 1030
+        line_intro:
+          type: string
+          example: '주말에 가기 좋은 근교 캠핑장입니다'
+        intro:
+          type: string
+          example: '주말에 가기 좋은 근교 캠핑장입니다. OO캠핑장은 ~~~~~~'
+        image_url:
+          type: string
+          format: uri
+          example: 'https://example.com/image.png'
+        created_time:
+          type: string
+          format: date-time
+        updated_time:
+          type: string
+          format: date-time
+        address:
+          type: string
+          example: '강원도 강릉시'
+        latitude:
+          type: number
+          example: 37.2199766
+        longitude:
+          type: number
+          example: 127.6403183
