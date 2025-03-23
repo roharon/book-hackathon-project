@@ -3,7 +3,7 @@ from os import environ
 
 import requests
 
-URL = "https://apis.data.go.kr/B551011/GoCamping/locationBasedList"
+URL = "http://apis.data.go.kr/B551011/GoCamping/locationBasedList"
 
 
 def fetch_suggest_campsite(longitude, latitude):

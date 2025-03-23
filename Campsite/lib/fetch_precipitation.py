@@ -34,7 +34,6 @@ def fetch_precipitation(begins_at, reg_id):
 
 
 def _precipitation_score(weather):
-	score = (weather['rnSt3Pm'] + weather['rnSt4Pm'] + weather['rnSt5Pm'] + weather['rnSt6Pm'] + weather['rnSt7Pm'] +
-	         weather['rnSt8'] + weather['rnSt9'])
+	values = [value for key, value in weather.items() if key.startswith('rnSt')]
 
-	return score / 7
+	return sum(values) / len(values)
